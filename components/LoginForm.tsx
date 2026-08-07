@@ -37,24 +37,24 @@ export default function LoginForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="w-full max-w-sm rounded-2xl border border-border bg-panel p-8 shadow-xl"
+      className="w-full max-w-sm rounded-card border border-border bg-panel p-8 shadow-soft"
     >
-      <h1 className="mb-1 text-xl font-semibold text-neutral-900">Authenticator</h1>
-      <p className="mb-6 text-sm text-neutral-500">Enter your PIN to unlock</p>
+      <h1 className="mb-1 text-xl font-semibold text-ink">Authenticator</h1>
+      <p className="mb-6 text-sm text-muted">Enter your PIN to unlock</p>
       <input
         type="password"
         inputMode="numeric"
         autoFocus
         value={pin}
         onChange={(e) => setPin(e.target.value)}
-        className="w-full rounded-lg border border-border bg-neutral-100 px-4 py-3 text-center text-2xl tracking-[0.4em] text-neutral-900 outline-none focus:border-accent"
+        className="w-full rounded-control border-[1.5px] border-accent bg-accent-soft px-4 py-3 text-center text-2xl tracking-[0.4em] text-ink outline-none focus:ring-2 focus:ring-accent/30"
         placeholder="••••••"
       />
-      {error && <p className="mt-3 text-sm text-red-600">{error}</p>}
+      {error && <p className="mt-3 text-sm text-danger">{error}</p>}
       <button
         type="submit"
         disabled={loading || pin.length === 0}
-        className="mt-6 w-full rounded-lg bg-accent py-3 font-medium text-white transition-opacity disabled:opacity-50"
+        className="mt-6 w-full rounded-control bg-accent py-3 font-medium text-white transition-opacity disabled:opacity-50"
       >
         {loading ? "Checking…" : "Unlock"}
       </button>
