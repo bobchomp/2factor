@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { Account } from "@/lib/types";
 import AddAccountModal from "./AddAccountModal";
 import CodeCard from "./CodeCard";
@@ -12,6 +12,15 @@ type AddPayload = {
   label?: string;
   secret?: string;
 };
+
+const INACTIVITY_LOCK_MS = 5 * 60 * 1000;
+const ACTIVITY_EVENTS = [
+  "mousemove",
+  "mousedown",
+  "keydown",
+  "touchstart",
+  "scroll",
+] as const;
 
 export default function Dashboard() {
   const router = useRouter();
@@ -55,11 +64,32 @@ export default function Dashboard() {
     }
   }
 
-  async function handleLogout() {
+  const handleLogout = useCallback(async () => {
     await fetch("/api/auth/logout", { method: "POST" });
     router.push("/login");
     router.refresh();
-  }
+  }, [router]);
+
+  useEffect(() => {
+    let timer: ReturnType<typeof setTimeout>;
+
+    const resetTimer = () => {
+      clearTimeout(timer);
+      timer = setTimeout(handleLogout, INACTIVITY_LOCK_MS);
+    };
+
+    resetTimer();
+    ACTIVITY_EVENTS.forEach((event) =>
+      window.addEventListener(event, resetTimer, { passive: true })
+    );
+
+    return () => {
+      clearTimeout(timer);
+      ACTIVITY_EVENTS.forEach((event) =>
+        window.removeEventListener(event, resetTimer)
+      );
+    };
+  }, [handleLogout]);
 
   return (
     <main className="min-h-screen bg-bg px-4 py-8">
