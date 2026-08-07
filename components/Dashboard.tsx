@@ -56,7 +56,7 @@ export default function Dashboard() {
     <main className="min-h-screen bg-bg px-4 py-8">
       <div className="mx-auto max-w-3xl">
         <div className="mb-6 flex items-center justify-between">
-          <h1 className="text-xl font-semibold text-white">Authenticator</h1>
+          <h1 className="text-xl font-semibold text-neutral-900">Authenticator</h1>
           <div className="flex gap-2">
             <button
               onClick={() => setShowAdd(true)}
@@ -66,7 +66,7 @@ export default function Dashboard() {
             </button>
             <button
               onClick={handleLogout}
-              className="rounded-lg border border-border px-4 py-2 text-sm text-neutral-300 hover:border-neutral-500"
+              className="rounded-lg border border-border px-4 py-2 text-sm text-neutral-600 hover:border-neutral-400 hover:text-neutral-900"
             >
               Lock
             </button>

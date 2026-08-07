@@ -53,20 +53,20 @@ export default function AddAccountModal({ onAdd, onClose }: Props) {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
       <div className="w-full max-w-md rounded-2xl border border-border bg-panel p-6 shadow-xl">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-white">Add account</h2>
+          <h2 className="text-lg font-semibold text-neutral-900">Add account</h2>
           <button
             onClick={onClose}
-            className="text-neutral-500 hover:text-white"
+            className="text-neutral-400 hover:text-neutral-900"
             aria-label="Close"
           >
             ✕
           </button>
         </div>
 
-        <div className="mb-4 flex gap-2 rounded-lg bg-black/30 p-1 text-sm">
+        <div className="mb-4 flex gap-2 rounded-lg bg-neutral-100 p-1 text-sm">
           <button
             className={`flex-1 rounded-md py-1.5 ${
-              mode === "manual" ? "bg-accent text-white" : "text-neutral-400"
+              mode === "manual" ? "bg-accent text-white" : "text-neutral-500"
             }`}
             onClick={() => setMode("manual")}
           >
@@ -74,7 +74,7 @@ export default function AddAccountModal({ onAdd, onClose }: Props) {
           </button>
           <button
             className={`flex-1 rounded-md py-1.5 ${
-              mode === "qr" ? "bg-accent text-white" : "text-neutral-400"
+              mode === "qr" ? "bg-accent text-white" : "text-neutral-500"
             }`}
             onClick={() => setMode("qr")}
           >
@@ -85,38 +85,38 @@ export default function AddAccountModal({ onAdd, onClose }: Props) {
         {mode === "manual" ? (
           <form onSubmit={handleManualSubmit} className="space-y-3">
             <div>
-              <label className="mb-1 block text-xs text-neutral-400">
+              <label className="mb-1 block text-xs text-neutral-500">
                 Service (e.g. GitHub)
               </label>
               <input
                 value={issuer}
                 onChange={(e) => setIssuer(e.target.value)}
-                className="w-full rounded-lg border border-border bg-black/30 px-3 py-2 text-white outline-none focus:border-accent"
+                className="w-full rounded-lg border border-border bg-neutral-100 px-3 py-2 text-neutral-900 outline-none focus:border-accent"
               />
             </div>
             <div>
-              <label className="mb-1 block text-xs text-neutral-400">
+              <label className="mb-1 block text-xs text-neutral-500">
                 Account (e.g. you@email.com)
               </label>
               <input
                 value={label}
                 onChange={(e) => setLabel(e.target.value)}
-                className="w-full rounded-lg border border-border bg-black/30 px-3 py-2 text-white outline-none focus:border-accent"
+                className="w-full rounded-lg border border-border bg-neutral-100 px-3 py-2 text-neutral-900 outline-none focus:border-accent"
               />
             </div>
             <div>
-              <label className="mb-1 block text-xs text-neutral-400">
+              <label className="mb-1 block text-xs text-neutral-500">
                 Secret key (base32)
               </label>
               <input
                 value={secret}
                 onChange={(e) => setSecret(e.target.value)}
                 required
-                className="w-full rounded-lg border border-border bg-black/30 px-3 py-2 font-mono text-white outline-none focus:border-accent"
+                className="w-full rounded-lg border border-border bg-neutral-100 px-3 py-2 font-mono text-neutral-900 outline-none focus:border-accent"
                 placeholder="JBSWY3DPEHPK3PXP"
               />
             </div>
-            {error && <p className="text-sm text-red-400">{error}</p>}
+            {error && <p className="text-sm text-red-600">{error}</p>}
             <button
               type="submit"
               disabled={submitting}
@@ -127,7 +127,7 @@ export default function AddAccountModal({ onAdd, onClose }: Props) {
           </form>
         ) : (
           <div className="space-y-3">
-            <p className="text-sm text-neutral-400">
+            <p className="text-sm text-neutral-500">
               Upload a screenshot of the setup QR code shown by the other
               app or website.
             </p>
@@ -136,11 +136,11 @@ export default function AddAccountModal({ onAdd, onClose }: Props) {
               accept="image/*"
               onChange={handleFile}
               disabled={submitting}
-              className="block w-full text-sm text-neutral-300 file:mr-3 file:rounded-lg file:border-0 file:bg-accent file:px-3 file:py-2 file:text-white"
+              className="block w-full text-sm text-neutral-600 file:mr-3 file:rounded-lg file:border-0 file:bg-accent file:px-3 file:py-2 file:text-white"
             />
-            {error && <p className="text-sm text-red-400">{error}</p>}
+            {error && <p className="text-sm text-red-600">{error}</p>}
             {submitting && (
-              <p className="text-sm text-neutral-400">Reading…</p>
+              <p className="text-sm text-neutral-500">Reading…</p>
             )}
           </div>
         )}

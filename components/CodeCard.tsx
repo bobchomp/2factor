@@ -42,26 +42,26 @@ export default function CodeCard({
     <div className="group relative rounded-xl border border-border bg-panel p-4">
       <button
         onClick={() => onDelete(account.id)}
-        className="absolute right-3 top-3 text-neutral-500 opacity-0 transition-opacity hover:text-red-400 group-hover:opacity-100"
+        className="absolute right-3 top-3 text-neutral-400 opacity-0 transition-opacity hover:text-red-500 group-hover:opacity-100"
         aria-label={`Remove ${account.label}`}
       >
         ✕
       </button>
-      <p className="truncate pr-6 text-sm text-neutral-400">
+      <p className="truncate pr-6 text-sm text-neutral-500">
         {account.issuer || account.label}
       </p>
       {account.issuer && (
-        <p className="truncate pr-6 text-xs text-neutral-500">
+        <p className="truncate pr-6 text-xs text-neutral-400">
           {account.label}
         </p>
       )}
       <button
         onClick={handleCopy}
-        className="mt-2 block text-left font-mono text-3xl tracking-widest text-white"
+        className="mt-2 block text-left font-mono text-3xl tracking-widest text-neutral-900"
       >
         {formatted}
       </button>
-      <div className="mt-3 h-1 w-full overflow-hidden rounded-full bg-black/30">
+      <div className="mt-3 h-1 w-full overflow-hidden rounded-full bg-neutral-200">
         <div
           className="h-full bg-accent transition-[width] duration-1000 ease-linear"
           style={{ width: `${progress * 100}%` }}
