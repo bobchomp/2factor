@@ -23,27 +23,36 @@ export default function Dashboard() {
     fetch("/api/accounts")
       .then((res) => res.json())
       .then((data) => setAccounts(data.accounts || []))
+      .catch(() => {})
       .finally(() => setLoading(false));
   }, []);
 
   async function handleAdd(payload: AddPayload): Promise<string | null> {
-    const res = await fetch("/api/accounts", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-    const data = await res.json();
-    if (!res.ok) return data.error || "Could not add account.";
-    setAccounts(data.accounts);
-    setShowAdd(false);
-    return null;
+    try {
+      const res = await fetch("/api/accounts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+      if (!res.ok) return data.error || "Could not add account.";
+      setAccounts(data.accounts);
+      setShowAdd(false);
+      return null;
+    } catch {
+      return "Network error. Try again.";
+    }
   }
 
   async function handleDelete(id: string) {
     const previous = accounts;
     setAccounts((accts) => accts.filter((a) => a.id !== id));
-    const res = await fetch(`/api/accounts/${id}`, { method: "DELETE" });
-    if (!res.ok) setAccounts(previous);
+    try {
+      const res = await fetch(`/api/accounts/${id}`, { method: "DELETE" });
+      if (!res.ok) setAccounts(previous);
+    } catch {
+      setAccounts(previous);
+    }
   }
 
   async function handleLogout() {

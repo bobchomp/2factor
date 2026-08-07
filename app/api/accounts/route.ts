@@ -5,8 +5,15 @@ import { normalizeSecret, parseOtpAuthUri } from "@/lib/totp";
 import type { Account } from "@/lib/types";
 
 export async function GET() {
-  const accounts = await loadAccounts();
-  return NextResponse.json({ accounts });
+  try {
+    const accounts = await loadAccounts();
+    return NextResponse.json({ accounts });
+  } catch (err) {
+    return NextResponse.json(
+      { error: err instanceof Error ? err.message : "Could not load accounts." },
+      { status: 500 }
+    );
+  }
 }
 
 export async function POST(req: NextRequest) {
@@ -78,6 +85,13 @@ export async function POST(req: NextRequest) {
     createdAt: Date.now(),
   };
 
-  const accounts = await addAccount(account);
-  return NextResponse.json({ accounts }, { status: 201 });
+  try {
+    const accounts = await addAccount(account);
+    return NextResponse.json({ accounts }, { status: 201 });
+  } catch (err) {
+    return NextResponse.json(
+      { error: err instanceof Error ? err.message : "Could not save account." },
+      { status: 500 }
+    );
+  }
 }

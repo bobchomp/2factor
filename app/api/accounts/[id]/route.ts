@@ -6,6 +6,13 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  const accounts = await deleteAccount(id);
-  return NextResponse.json({ accounts });
+  try {
+    const accounts = await deleteAccount(id);
+    return NextResponse.json({ accounts });
+  } catch (err) {
+    return NextResponse.json(
+      { error: err instanceof Error ? err.message : "Could not delete account." },
+      { status: 500 }
+    );
+  }
 }

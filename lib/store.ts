@@ -12,7 +12,18 @@ function useBlob(): boolean {
   return Boolean(process.env.BLOB_READ_WRITE_TOKEN);
 }
 
+function assertStorageAvailable(): void {
+  // Vercel's serverless functions have a read-only filesystem (aside from
+  // /tmp), so the local-file fallback only works for local dev.
+  if (!useBlob() && process.env.VERCEL) {
+    throw new Error(
+      "No storage is connected. In your Vercel project, go to Storage -> Create Database -> Blob, connect it to this project, then redeploy."
+    );
+  }
+}
+
 async function readRaw(): Promise<string | null> {
+  assertStorageAvailable();
   if (useBlob()) {
     const { blobs } = await list({ prefix: BLOB_PATHNAME, limit: 1 });
     const match = blobs.find((b) => b.pathname === BLOB_PATHNAME);
@@ -31,6 +42,7 @@ async function readRaw(): Promise<string | null> {
 }
 
 async function writeRaw(content: string): Promise<void> {
+  assertStorageAvailable();
   if (useBlob()) {
     await put(BLOB_PATHNAME, content, {
       access: "public",
