@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { Account } from "@/lib/types";
 import AddAccountModal from "./AddAccountModal";
 import CodeCard from "./CodeCard";
@@ -27,6 +27,10 @@ export default function Dashboard() {
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [loading, setLoading] = useState(true);
   const [showAdd, setShowAdd] = useState(false);
+  const [secondsUntilLock, setSecondsUntilLock] = useState(
+    INACTIVITY_LOCK_MS / 1000
+  );
+  const lastActivityRef = useRef(Date.now());
 
   useEffect(() => {
     fetch("/api/accounts")
@@ -71,31 +75,58 @@ export default function Dashboard() {
   }, [router]);
 
   useEffect(() => {
-    let timer: ReturnType<typeof setTimeout>;
-
-    const resetTimer = () => {
-      clearTimeout(timer);
-      timer = setTimeout(handleLogout, INACTIVITY_LOCK_MS);
+    const markActivity = () => {
+      lastActivityRef.current = Date.now();
     };
 
-    resetTimer();
     ACTIVITY_EVENTS.forEach((event) =>
-      window.addEventListener(event, resetTimer, { passive: true })
+      window.addEventListener(event, markActivity, { passive: true })
     );
 
+    const interval = setInterval(() => {
+      const remainingMs =
+        INACTIVITY_LOCK_MS - (Date.now() - lastActivityRef.current);
+      if (remainingMs <= 0) {
+        setSecondsUntilLock(0);
+        handleLogout();
+        return;
+      }
+      setSecondsUntilLock(Math.ceil(remainingMs / 1000));
+    }, 1000);
+
     return () => {
-      clearTimeout(timer);
+      clearInterval(interval);
       ACTIVITY_EVENTS.forEach((event) =>
-        window.removeEventListener(event, resetTimer)
+        window.removeEventListener(event, markActivity)
       );
     };
   }, [handleLogout]);
 
+  const lockMinutes = Math.floor(secondsUntilLock / 60);
+  const lockSeconds = secondsUntilLock % 60;
+  const lockCountdown = `${lockMinutes}:${String(lockSeconds).padStart(2, "0")}`;
+  const lockUrgency =
+    secondsUntilLock <= 15 ? "danger" : secondsUntilLock <= 60 ? "warn" : null;
+
   return (
     <main className="min-h-screen bg-bg px-4 py-8">
       <div className="mx-auto max-w-3xl">
-        <div className="mb-6 flex items-center justify-between">
+        <div className="mb-6 flex items-center justify-between gap-3">
           <h1 className="text-xl font-semibold text-ink">Authenticator</h1>
+          <div className="hidden flex-1 justify-center sm:flex">
+            <div
+              className={`rounded-control border px-3 py-1.5 text-xs shadow-soft ${
+                lockUrgency === "danger"
+                  ? "border-danger/30 bg-danger/10 text-danger"
+                  : lockUrgency === "warn"
+                    ? "border-warn/30 bg-warn/10 text-warn"
+                    : "border-border bg-panel text-muted"
+              }`}
+            >
+              Auto-lock in{" "}
+              <span className="font-mono tabular-nums">{lockCountdown}</span>
+            </div>
+          </div>
           <div className="flex gap-2">
             <button
               onClick={() => setShowAdd(true)}
