@@ -13,7 +13,7 @@ type AddPayload = {
   secret?: string;
 };
 
-const INACTIVITY_LOCK_MS = 5 * 60 * 1000;
+const INACTIVITY_LOCK_MS = 3 * 60 * 1000;
 const ACTIVITY_EVENTS = [
   "mousemove",
   "mousedown",
