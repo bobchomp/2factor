@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { deleteAccount } from "@/lib/store";
+import { deleteAccount } from "@/lib/accounts";
 
 export async function DELETE(
   _req: NextRequest,

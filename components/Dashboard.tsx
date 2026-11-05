@@ -5,6 +5,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type { Account } from "@/lib/types";
 import AddAccountModal from "./AddAccountModal";
 import CodeCard from "./CodeCard";
+import FaceIdSettings from "./FaceIdSettings";
 
 type AddPayload = {
   uri?: string;
@@ -142,6 +143,8 @@ export default function Dashboard() {
             </button>
           </div>
         </div>
+
+        <FaceIdSettings />
 
         {loading ? (
           <p className="text-muted">Loading…</p>

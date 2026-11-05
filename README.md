@@ -69,6 +69,16 @@ Click **+ Add account**, then either:
 
 Codes refresh every 30 seconds; click a code to copy it.
 
+## Face ID / biometric unlock
+
+Once logged in via PIN, click **+ Add this device** in the Face ID panel to
+register this browser's platform authenticator (Face ID, Touch ID, Windows
+Hello). Next time, the login screen offers **Unlock with Face ID** above the
+PIN field - PIN entry always stays available as a fallback. Uses WebAuthn
+(`@simplewebauthn`): the device's biometric sensor never leaves the device,
+the server only stores a public key per registered device, and each device
+can be added or removed independently from the Face ID panel.
+
 ## Notes / limitations
 
 - This is built for one user (you). There's no multi-user support, and the

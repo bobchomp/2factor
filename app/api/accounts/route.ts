@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
-import { addAccount, loadAccounts } from "@/lib/store";
+import { addAccount, loadAccounts } from "@/lib/accounts";
 import { normalizeSecret, parseOtpAuthUri } from "@/lib/totp";
 import type { Account } from "@/lib/types";
 
