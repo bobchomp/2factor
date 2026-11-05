@@ -33,6 +33,7 @@ export async function POST(req: NextRequest) {
     })),
     userVerification: "required",
   });
+  options.hints = ["client-device"];
 
   const res = NextResponse.json(options);
   res.cookies.set(LOGIN_CHALLENGE_COOKIE, options.challenge, {

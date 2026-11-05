@@ -35,6 +35,10 @@ export async function POST(req: NextRequest) {
       authenticatorAttachment: "platform",
     },
   });
+  // Steer the OS/browser toward the device's own biometric sensor rather
+  // than offering a cross-device ("scan this QR code") or security-key
+  // option in the passkey picker.
+  options.hints = ["client-device"];
 
   const res = NextResponse.json(options);
   res.cookies.set(REG_CHALLENGE_COOKIE, options.challenge, {
