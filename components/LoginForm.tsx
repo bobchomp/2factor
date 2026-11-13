@@ -6,6 +6,7 @@ import {
 } from "@simplewebauthn/browser";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, type FormEvent } from "react";
+import { isMobileDevice } from "@/lib/device";
 
 const KEYPAD_KEYS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "", "0", "backspace"];
 
@@ -33,7 +34,7 @@ export default function LoginForm() {
   const busy = loading || faceIdLoading;
 
   useEffect(() => {
-    if (!browserSupportsWebAuthn()) return;
+    if (!browserSupportsWebAuthn() || !isMobileDevice()) return;
     let cancelled = false;
     fetch("/api/webauthn/status")
       .then((res) => res.json())

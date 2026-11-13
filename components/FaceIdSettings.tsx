@@ -5,17 +5,21 @@ import {
   startRegistration,
 } from "@simplewebauthn/browser";
 import { useEffect, useState } from "react";
+import { isMobileDevice } from "@/lib/device";
 import type { PublicCredential } from "@/lib/webauthn";
 
 export default function FaceIdSettings() {
-  const [supported, setSupported] = useState(false);
+  const [canRegister, setCanRegister] = useState(false);
   const [credentials, setCredentials] = useState<PublicCredential[]>([]);
   const [loading, setLoading] = useState(true);
   const [registering, setRegistering] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    setSupported(browserSupportsWebAuthn());
+    // The login screen only offers Face ID on mobile, so registering it
+    // from a desktop browser would just be a dead end - only offer setup
+    // here on the same kind of device that can actually use it.
+    setCanRegister(browserSupportsWebAuthn() && isMobileDevice());
     fetch("/api/webauthn/credentials")
       .then((res) => res.json())
       .then((data) => setCredentials(data.credentials || []))
@@ -75,7 +79,7 @@ export default function FaceIdSettings() {
     }
   }
 
-  if (!supported || loading) return null;
+  if (loading || (!canRegister && credentials.length === 0)) return null;
 
   return (
     <div className="mb-6 rounded-card border border-border bg-panel p-4 shadow-soft">
@@ -88,13 +92,15 @@ export default function FaceIdSettings() {
               : "Set up Face ID to skip typing your PIN on this device."}
           </p>
         </div>
-        <button
-          onClick={handleRegister}
-          disabled={registering}
-          className="rounded-control border border-accent bg-accent-soft px-3 py-1.5 text-sm font-medium text-accent disabled:opacity-50"
-        >
-          {registering ? "Setting up…" : "+ Add this device"}
-        </button>
+        {canRegister && (
+          <button
+            onClick={handleRegister}
+            disabled={registering}
+            className="rounded-control border border-accent bg-accent-soft px-3 py-1.5 text-sm font-medium text-accent disabled:opacity-50"
+          >
+            {registering ? "Setting up…" : "+ Add this device"}
+          </button>
+        )}
       </div>
 
       {credentials.length > 0 && (
